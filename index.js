@@ -3,7 +3,7 @@ const app = express()
 const PORT = 3001;
 app.use(express.json());
 
-const contacts = [
+let contacts = [
   { 
     "id": 1,
     "name": "Arto Hellas", 
@@ -44,6 +44,12 @@ app.get('/contacts/:id', (request, response) => {
   const id = Number(request.params.id);
   contact = contacts.find(contact => contact.id === id);
   response.status(200).send(contact);
+})
+
+app.delete('/contacts/:id', (request, response) => {
+  const id = Number(request.params.id);
+  contacts = contacts.filter(contact => contact.id !== id);
+  response.status(202).send(contacts);
 })
 
 app.listen(PORT);
