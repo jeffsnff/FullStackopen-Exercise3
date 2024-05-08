@@ -40,5 +40,11 @@ app.get('/info', (request, response) => {
   response.status(200).send(`<p>Phonebook has ${numContacts} people</p><p>${requestTime}</p>`);
 })
 
+app.get('/contacts/:id', (request, response) => {
+  const id = Number(request.params.id);
+  contact = contacts.find(contact => contact.id === id);
+  response.status(200).send(contact);
+})
+
 app.listen(PORT);
 console.log(`Server is running on ${PORT}`);
