@@ -3,6 +3,11 @@ const app = express()
 const PORT = 3001;
 app.use(express.json());
 
+function generateID(){
+  const newID = contacts.length > 0 ? Math.max(...contacts.map(contact => contact.id)) : 0;
+  return newID + 1;
+}
+
 let contacts = [
   { 
     "id": 1,
@@ -50,6 +55,16 @@ app.delete('/contacts/:id', (request, response) => {
   const id = Number(request.params.id);
   contacts = contacts.filter(contact => contact.id !== id);
   response.status(202).send(contacts);
+})
+
+app.post('/contacts', (request, response) => {
+  const contact = {
+    name: request.body.name,
+    number: request.body.number,
+    id: generateID()
+  }
+  contacts = contacts.concat(contact);
+  response.status(200).send(contacts);
 })
 
 app.listen(PORT);
