@@ -8,6 +8,14 @@ function generateID(){
   return newID + 1;
 }
 
+function duplicateContact(body){
+  for(let i = 0; i < contacts.length; i++){
+    if(contacts[i].name === body.name){
+      return contacts[i].name;
+    }
+  }
+}
+
 let contacts = [
   { 
     "id": 1,
@@ -58,13 +66,34 @@ app.delete('/contacts/:id', (request, response) => {
 })
 
 app.post('/contacts', (request, response) => {
-  const contact = {
-    name: request.body.name,
-    number: request.body.number,
-    id: generateID()
+
+  const body = request.body;
+
+  if(Object.keys(body).length === 0){
+    response.status(400).json({
+      error: 'Content Missing'
+    });
+  }else if(!body.name){
+    response.status(400).json({
+      error: 'Name Missing'
+    });
+  }else if(!body.number){
+    response.status(400).json({
+      error: 'Number Missing'
+    });
+  }else if(duplicateContact(body) === body.name){
+    response.status(400).json({
+      error: 'Name must be unique'
+    });
+  }else{
+    const contact = {
+      name: body.name,
+      number: body.number,
+      id: generateID()
+    } 
+    contacts = contacts.concat(contact);
+    response.send(contacts);
   }
-  contacts = contacts.concat(contact);
-  response.status(200).send(contacts);
 })
 
 app.listen(PORT);
