@@ -2,6 +2,7 @@ const express = require('express');
 const app = express()
 const PORT = 3001;
 app.use(express.json());
+app.use(requestLogger)
 
 function generateID(){
   const newID = contacts.length > 0 ? Math.max(...contacts.map(contact => contact.id)) : 0;
@@ -14,6 +15,14 @@ function duplicateContact(body){
       return contacts[i].name;
     }
   }
+}
+
+function requestLogger(request, response, next){
+  console.log('Method : ', request.method);
+  console.log('Path : ', request.path,);
+  console.log('Body : ', request.body);
+  console.log('-----');
+  next();
 }
 
 let contacts = [
@@ -95,6 +104,12 @@ app.post('/contacts', (request, response) => {
     response.send(contacts);
   }
 })
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({error: "Unknown endpoint"})
+}
+app.use(unknownEndpoint)
+
 
 app.listen(PORT);
 console.log(`Server is running on ${PORT}`);
