@@ -103,7 +103,7 @@ app.post('/contacts', (request, response) => {
       id: generateID()
     } 
     contacts = contacts.concat(contact);
-    response.send(contacts);
+    response.status(200).json(contact);
   }
 })
 
