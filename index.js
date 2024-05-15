@@ -107,6 +107,20 @@ app.post('/contacts', (request, response) => {
   }
 })
 
+app.put('/contacts/:id', (request, response) => {
+  const id = Number(request.params.id)
+  contactToUpdate = contacts.find(contact => contact.id === id)
+  
+  contacts.forEach((contact) => {
+    console.log(contact.id)
+    if(contact.id === id){
+      return contact.number = request.body.number
+    }
+  })
+
+  response.status(202).json(request.body)
+})
+
 const unknownEndpoint = (request, response) => {
   response.status(404).send({error: "Unknown endpoint"})
 }
