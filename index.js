@@ -1,10 +1,10 @@
 const express = require('express');
 const cors = require('cors');
-const app = express()
-const PORT = process.env.PORT || 3001
+const app = express();
+const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
-app.use(requestLogger)
+app.use(requestLogger);
 
 function generateID(){
   const newID = contacts.length > 0 ? Math.max(...contacts.map(contact => contact.id)) : 0;
@@ -56,7 +56,7 @@ app.get('/contacts', (request, response) => {
 
 app.get('/info', (request, response) => {
   let numContacts = 0;
-  const requestTime = new Date
+  const requestTime = new Date;
   for(let i = 0; i < contacts.length; i++){
     numContacts++;
   }
@@ -108,24 +108,21 @@ app.post('/contacts', (request, response) => {
 })
 
 app.put('/contacts/:id', (request, response) => {
-  const id = Number(request.params.id)
-  contactToUpdate = contacts.find(contact => contact.id === id)
+  const id = Number(request.params.id);
+  contactToUpdate = contacts.find(contact => contact.id === id);
   
   contacts.forEach((contact) => {
-    console.log(contact.id)
     if(contact.id === id){
-      return contact.number = request.body.number
+      return contact.number = request.body.number;
     }
   })
-
-  response.status(202).json(request.body)
+  response.status(202).json(request.body);
 })
 
 const unknownEndpoint = (request, response) => {
-  response.status(404).send({error: "Unknown endpoint"})
+  response.status(404).send({error: "Unknown endpoint"});
 }
-app.use(unknownEndpoint)
 
-
+app.use(unknownEndpoint);
 app.listen(PORT);
 console.log(`Server is running on ${PORT}`);
