@@ -68,13 +68,14 @@ app.get('/contacts', (request, response) => {
 })
 
 app.get('/info', (request, response) => {
-  let numContacts = 0;
-  const requestTime = new Date;
-  for(let i = 0; i < contacts.length; i++){
-    numContacts++;
-  }
-
-  response.status(200).send(`<p>Phonebook has ${numContacts} people</p><p>${requestTime}</p>`);
+  Contact.find({}).then(contacts => {
+    let numContacts = 0;
+    const requestTime = new Date;
+    for(let i = 0; i < contacts.length; i++){
+     numContacts++;
+    }
+    response.status(200).send(`<p>Phonebook has ${numContacts} people</p><p>${requestTime}</p>`);
+  })
 })
 
 app.get('/contacts/:id', (request, response) => {
