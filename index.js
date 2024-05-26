@@ -1,10 +1,23 @@
+require('dotenv').config();
+const mongoose = require('mongoose');
+mongoose.set('strictQuery', false);
 const express = require('express');
 const cors = require('cors');
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT
 app.use(cors());
 app.use(express.json());
 app.use(requestLogger);
+url = process.env.MONGODB_URI
+mongoose.connect(url);
+
+// This creates the Contact Schema for MongoDB
+const contactSchema = new mongoose.Schema({
+  contact: String,
+  number: String,
+});
+// Assings the Schema Model to Contact
+const Contact = mongoose.model('Contact', contactSchema);
 
 function generateID(){
   const newID = contacts.length > 0 ? Math.max(...contacts.map(contact => contact.id)) : 0;
@@ -51,7 +64,9 @@ let contacts = [
 ]
 
 app.get('/contacts', (request, response) => {
-  response.json(contacts);
+  Contact.find({}).then(contacts => {
+    response.json(contacts)
+  })
 })
 
 app.get('/info', (request, response) => {

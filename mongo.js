@@ -1,15 +1,8 @@
-const mongoose = require('mongoose');
-const url = `mongodb+srv://fullstack-notes:${process.argv[2]}@notes-database.julpkqu.mongodb.net/contacts?retryWrites=true&w=majority`;
-mongoose.set('strictQuery', false);
-mongoose.connect(url);
 
-// This creates the Contact Schema for MongoDB
-const contactSchema = new mongoose.Schema({
-  contact: String,
-  number: String,
-});
-// Assings the Schema Model to Contact
-const Contact = mongoose.model('Contact', contactSchema);
+const url = `mongodb+srv://fullstack-notes:${process.argv[2]}@notes-database.julpkqu.mongodb.net/contacts?retryWrites=true&w=majority`;
+
+
+
 
 // Creates a new contact
 const contact = new Contact({
