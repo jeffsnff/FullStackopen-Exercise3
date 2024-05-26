@@ -19,13 +19,15 @@ const contactSchema = new mongoose.Schema({
 // Assings the Schema Model to Contact
 const Contact = mongoose.model('Contact', contactSchema);
 
-function generateID(){
-  const newID = contacts.length > 0 ? Math.max(...contacts.map(contact => contact.id)) : 0;
-  return newID + 1;
-}
+function duplicateContact(Contact, contact){
+  //This is broken rightnow
 
-function duplicateContact(body){
-  // Need to figure this out.
+  // Contact.findOne({name: contact.name}).then(serveContact => {
+  //   return serveContact.name
+  //   if(serveContact.name === contact.name){
+  //     return true;
+  //   }
+  // })
 }
 
 function requestLogger(request, response, next){
@@ -106,10 +108,8 @@ app.post('/contacts', (request, response) => {
     response.status(400).json({
       error: 'Number Missing'
     });
-  }else if(duplicateContact(contact) === body.name){
-    response.status(400).json({
-      error: 'Name must be unique'
-    });
+  }else if(duplicateContact(Contact, contact) === body.name){
+    
   }else{
     contact.save().then(sendContact => {
     response.json(sendContact);
