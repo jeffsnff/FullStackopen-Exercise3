@@ -13,7 +13,7 @@ mongoose.connect(url);
 
 // This creates the Contact Schema for MongoDB
 const contactSchema = new mongoose.Schema({
-  contact: String,
+  name: String,
   number: String,
 });
 // Assings the Schema Model to Contact
@@ -25,11 +25,7 @@ function generateID(){
 }
 
 function duplicateContact(body){
-  for(let i = 0; i < contacts.length; i++){
-    if(contacts[i].name === body.name){
-      return contacts[i].name;
-    }
-  }
+  // Need to figure this out.
 }
 
 function requestLogger(request, response, next){
@@ -80,9 +76,9 @@ app.get('/info', (request, response) => {
 })
 
 app.get('/contacts/:id', (request, response) => {
-  const id = Number(request.params.id);
-  contact = contacts.find(contact => contact.id === id);
-  response.status(200).send(contact);
+  Contact.findById(request.params.id).then(contact => {
+    response.json(contact)
+  })
 })
 
 app.delete('/contacts/:id', (request, response) => {
@@ -92,8 +88,11 @@ app.delete('/contacts/:id', (request, response) => {
 })
 
 app.post('/contacts', (request, response) => {
-
   const body = request.body;
+  const contact = new Contact ({
+    name: body.name,
+    number: body.number
+  })
 
   if(Object.keys(body).length === 0){
     response.status(400).json({
@@ -107,18 +106,14 @@ app.post('/contacts', (request, response) => {
     response.status(400).json({
       error: 'Number Missing'
     });
-  }else if(duplicateContact(body) === body.name){
+  }else if(duplicateContact(contact) === body.name){
     response.status(400).json({
       error: 'Name must be unique'
     });
   }else{
-    const contact = {
-      name: body.name,
-      number: body.number,
-      id: generateID()
-    } 
-    contacts = contacts.concat(contact);
-    response.status(200).json(contact);
+    contact.save().then(sendContact => {
+    response.json(sendContact);
+    })
   }
 })
 
